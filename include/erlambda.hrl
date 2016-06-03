@@ -1,7 +1,4 @@
 
--type var() :: atom().
--type env() :: [{var(), expr()}].
-
 -record(app, {f :: closure(), x :: expr()}).
 -type app() :: #app{}.
 
@@ -11,4 +8,8 @@
 -record(lambda, {var :: var(), body :: expr()}).
 -type lambda() :: #lambda{}.
 
--type expr() :: app() | lambda() | var() | closure().
+-type var() :: atom().
+-type value() :: closure().
+-type env() :: [{var(), value()}].
+-type expr() :: app() | lambda() | var().
+

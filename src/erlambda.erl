@@ -4,19 +4,19 @@
 -export([app/2, closure/2, lambda/2]).
 -include_lib("erlambda/include/erlambda.hrl").
 
--spec eval(expr()) -> expr().
+-spec eval(expr()) -> value().
 eval(Expr) -> eval(Expr, []).
 
--spec eval(expr(), env()) -> expr().
+-spec eval(expr(), env()) -> value().
 eval(A = #app{}, Env) -> aply(eval(A#app.f, Env), eval(A#app.x,Env));
 eval(L = #lambda{}, Env) -> #closure{lambda = L, env = Env};
 eval(Var, Env) -> lookup(Var, Env).
 
--spec aply(closure(), expr()) -> expr().
+-spec aply(value(), value()) -> value().
 aply(#closure{lambda=#lambda{var = V, body = Body}, env=E}, X) ->
   eval(Body, [{V, X}| E]).
 
--spec lookup(var(), env()) -> expr().
+-spec lookup(var(), env()) -> value().
 lookup(K,Env) ->
   case proplists:lookup(K,Env) of
     {K,V} -> V;
