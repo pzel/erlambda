@@ -1,9 +1,10 @@
 erlambda
 =====
 
-An OTP library
 
-Build
------
+Contents
+-------
 
-    $ rebar3 compile
+  - `erlambda` -- an incarnation of [Matt Might's tiny interpreter](http://matt.might.net/articles/implementing-a-programming-language/)
+
+
