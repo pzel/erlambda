@@ -2,26 +2,21 @@
 -module(erlambda_tests).
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("erlambda/include/erlambda.hrl").
-
-e(A) -> erlambda:eval(A).
+-import(erlambda, [eval/1, app/2, closure/2, lambda/2]).
 
 id_test_() ->
   ?_assertEqual
-     (#closure{lambda=#lambda{var=x, body=x}, env=[]},
-      e(#lambda{var=x, body=x})).
+     (closure(lambda(x,x), []),
+      eval(lambda(x,x))).
 
 app_test_() ->
   [?_assertEqual
-      (#closure{lambda=#lambda{var=x, body=x}, env=[]},
-       e(#app{f=#lambda{var=x, body=x},
-              x=#lambda{var=x, body=x}})),
+      (closure(lambda(x,x), []),
+       eval(app(lambda(x,x), lambda(x,x)))),
 
    ?_assertEqual
-      (#closure{lambda=#lambda{var=b,body=b},env=[]},
-       e(#app{f=
-                #app{f=#lambda{var=f,body= #lambda{var=x, body=#app{f=f,x=x}}},
-                     x=#lambda{var=a,body=a}
-                    },
-              x=#lambda{var=b,body=b}
-             }))
+      (closure(lambda(b,b),[]),
+       eval(app(app(lambda(f, lambda(x, app(f,x))),
+                    lambda(a,a)),
+              lambda(b,b))))
   ].
