@@ -8,7 +8,7 @@
 eval(Expr) -> eval(Expr, []).
 
 -spec eval(expr(), env()) -> value().
-eval(A = #app{}, Env) -> aply(eval(A#app.f, Env), eval(A#app.x,Env));
+eval(A = #app{f=F,x=X}, Env) -> aply(eval(F, Env), eval(X,Env));
 eval(L = #lambda{}, Env) -> #closure{lambda = L, env = Env};
 eval(Var, Env) -> lookup(Var, Env).
 
