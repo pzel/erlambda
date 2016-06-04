@@ -23,8 +23,8 @@ applying_lambdas_test_() ->
 
 variable_not_defined_test_() ->
   [
-   ?_assertError({undefined_var, v, [{x, 2}]},
-                 eval(app(lambda(x,v), 2)))
+   ?_assertError({undefined_var, v, [{x, {}}]},
+                 eval(app(lambda(x,v), {})))
   ].
 
 immediate_values_numbers_test_() ->
