@@ -10,6 +10,9 @@ eval(Expr) -> eval(Expr, []).
 -spec eval(expr(), env()) -> value().
 eval(A = #app{f=F,x=X}, Env) -> aply(eval(F, Env), eval(X,Env));
 eval(L = #lambda{}, Env) -> #closure{lambda = L, env = Env};
+eval(N, _) when is_number(N) -> N;
+eval(B, _) when B =:= 'True'; B =:= 'False' -> B;
+eval({}, _)  -> {};
 eval(Var, Env) -> lookup(Var, Env).
 
 -spec aply(value(), value()) -> value().
