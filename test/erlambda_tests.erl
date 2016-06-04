@@ -2,7 +2,7 @@
 -module(erlambda_tests).
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("erlambda/include/erlambda.hrl").
--import(erlambda, [eval/1, app/2, closure/2, lambda/2]).
+-import(erlambda, [eval/1, app/2, closure/2, lambda/2, iff/3]).
 
 applying_lambdas_test_() ->
   [
@@ -19,6 +19,12 @@ applying_lambdas_test_() ->
        eval(app(app(lambda(f, lambda(x, app(f,x))),
                     lambda(a,a)),
                 lambda(b,b))))
+  ].
+
+variable_not_defined_test_() ->
+  [
+   ?_assertError({undefined_var, v, [{x, 2}]},
+                 eval(app(lambda(x,v), 2)))
   ].
 
 immediate_values_numbers_test_() ->
@@ -38,4 +44,14 @@ immediate_values_unit_test_() ->
   [
    ?_assertEqual({}, eval({})),
    ?_assertEqual({}, eval(app(lambda(b,b), {})))
+  ].
+
+
+iff_test_() ->
+  [
+   ?_assertEqual(1, eval(iff('True', 1, 0))),
+   ?_assertEqual(0, eval(iff('False', 1, 0))),
+   ?_assertEqual(1, eval(iff(app(lambda(x,x), 'True'),
+                             app(lambda(x,x), 1),
+                             app(lambda(x,x), 0))))
   ].
