@@ -1,14 +1,16 @@
 Nonterminals expression
-lambda
-unit.
+app lambda unit.
 
 Terminals '\\' '(' ')' '->' atom integer.
 
 Rootsymbol expression.
 
+app -> expression expression : app('$1', '$2').
+lambda -> '\\' atom '->' expression : lambda('$2','$4').
 unit -> '(' ')' : {}.
-lambda -> '(' '\\' atom '->' expression ')' : mk_lambda(unpack('$3'),'$5').
 
+expression -> '(' expression ')' : '$2'.
+expression -> app : '$1'.
 expression -> lambda : '$1'.
 expression -> atom : unpack('$1').
 expression -> integer : unpack('$1').
@@ -17,4 +19,5 @@ expression -> unit : '$1'.
 Erlang code.
 
 unpack({_, _, V}) -> V.
-mk_lambda(Var,Body) -> erlambda:lambda(Var,Body).
+app(F,X) -> erlambda:app(F,X).
+lambda(Var,Body) -> erlambda:lambda(unpack(Var),Body).
