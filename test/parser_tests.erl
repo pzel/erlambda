@@ -15,5 +15,8 @@ parsing_immediate_values_test_() ->
 
 parsing_lambda_expressions_test_() ->
   [
-   ?_assertEqual(#lambda{var=x, body=x}, parse("( \\ x -> x)"))
+   ?_assertEqual(#lambda{var=x, body=x}, parse("(\\x -> x)")),
+   ?_assertEqual(#lambda{var=x, body=2}, parse("(\\x->2)")),
+   ?_assertEqual(#lambda{var=x, body= #lambda{var=y, body=3}},
+                 parse("(\\x-> (\\y-> 3))"))
   ].
