@@ -1,12 +1,12 @@
 Nonterminals expression
-lambda fun
+lambda
 unit.
 
-Terminals '\\' '(' ')' ',' '->' '{' '}' atom integer.
+Terminals '\\' '(' ')' '->' atom integer.
 
 Rootsymbol expression.
 
-unit -> '{' '}' : {}.
+unit -> '(' ')' : {}.
 lambda -> '(' '\\' atom '->' expression ')' : mk_lambda(unpack('$3'),'$5').
 
 expression -> lambda : '$1'.
