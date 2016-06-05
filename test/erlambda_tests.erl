@@ -50,9 +50,9 @@ immediate_values_unit_test_() ->
 
 iff_test_() ->
   [
-   ?_assertEqual(1, eval(iff('True', 1, 0))),
-   ?_assertEqual(0, eval(iff('False', 1, 0))),
-   ?_assertEqual(1, eval(iff(app(lambda(x,x), 'True'),
-                             app(lambda(x,x), 1),
-                             app(lambda(x,x), 0))))
+   ?_assertEqual(1, run("if True then 1 else 0")),
+   ?_assertEqual(0, run("if False then 1 else 0")),
+   ?_assertEqual(1, run("if (\\x->True)()"
+                        " then (\\x->x) 1"
+                        " else (\\x->x) 0"))
   ].
