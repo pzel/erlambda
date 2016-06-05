@@ -9,7 +9,11 @@ immediate_values_test_() ->
   [
    ?_assertEqual(x, parse("x")),
    ?_assertEqual(0, parse("0")),
-   ?_assertEqual({}, parse("()"))
+   ?_assertEqual({}, parse("()")),
+
+   ?_assertEqual('True', parse("True")),
+   ?_assertEqual('False', parse("False")),
+   ?_assertError({not_boolean, 'Trulse'}, parse("Trulse"))
   ].
 
 lambda_expressions_test_() ->
@@ -21,7 +25,16 @@ lambda_expressions_test_() ->
 
 application_test_() ->
   [
-   ?_assertEqual(#app{f=f, x=x}, parse("f x"))
+   ?_assertEqual(#app{f=f, x=x}, parse("f x")),
+   ?_assertEqual(#app{f=#app{f=f, x=first},
+                      x=second},
+                 parse("f first second"))
+  ].
+
+iff_test_() ->
+  [
+   ?_assertEqual(#iff{condition=a, consequent=b, alternative=c},
+                 parse("if a then b else c"))
   ].
 
 nesting_test_() ->
@@ -30,4 +43,3 @@ nesting_test_() ->
    ?_assertEqual(parse("()"), parse("((((((((()))))))))")),
    ?_assertEqual(parse("f x"), parse("((f x))"))
   ].
-

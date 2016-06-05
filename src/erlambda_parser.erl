@@ -9,5 +9,6 @@ parse(String) ->
     {ok, Expr} = erlambda_yecc_parser:parse(Tokens),
     Expr.
 
-reserved(_A) -> false.
+reserved(A) ->
+  lists:member(A, ['if', 'then', 'else']).
 
