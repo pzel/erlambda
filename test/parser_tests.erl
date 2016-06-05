@@ -9,5 +9,6 @@ parse(String) ->
 parsing_immediate_values_test_() ->
   [
    ?_assertEqual(x, parse("x")),
-   ?_assertEqual(0, parse("0"))
+   ?_assertEqual(0, parse("0")),
+   ?_assertEqual({}, parse("{}"))
   ].
