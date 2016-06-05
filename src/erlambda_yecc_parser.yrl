@@ -6,9 +6,10 @@ Terminals '(' ')' ',' atom integer.
 
 Rootsymbol expression.
 
-expression -> atom : unatom('$1').
+expression -> atom : unpack('$1').
+expression -> integer : unpack('$1').
 
 
 Erlang code.
 
-unatom({atom, _, V}) -> V.
+unpack({_, _, V}) -> V.
