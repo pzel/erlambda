@@ -5,10 +5,9 @@
 parse(String) ->
     {ok, Tokens, _} = erl_scan:string
                         (String, 0,
-                         [{reserved_word_fun, const(false)}]),
+                         [{reserved_word_fun, fun reserved/1}]),
     {ok, Expr} = erlambda_yecc_parser:parse(Tokens),
     Expr.
 
-%%
+reserved(_A) -> false.
 
-const(V) -> fun(_) -> V end.
