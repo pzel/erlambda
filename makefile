@@ -1,13 +1,14 @@
 .PHONY: all cover dialyzer test
+REBAR:=QUIET=1 rebar3
 
 all: test dialyzer cover
 
 cover:
-	rebar3 cover
+	@$(REBAR) cover
 
 dialyzer:
-	rebar3 dialyzer
+	@$(REBAR) dialyzer
 
 test:
-	rebar3 eunit
+	@$(REBAR) eunit
 
