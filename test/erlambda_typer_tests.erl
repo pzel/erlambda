@@ -17,7 +17,29 @@ immediate_values_test_() ->
 binding_from_type_environment_test_() ->
   [
    ?_assertEqual(any_type, check("x", [])),
-   ?_assertEqual('Number'(), check("x", [{x, 'Number'()}])),
-   ?_assertEqual(#'Fun'{input='Number'(), output='Number'()},
-                 check("\\x -> x", [{x, 'Number'()}]))
+   ?_assertEqual('Number'(), check("x", [{x, 'Number'()}]))
   ].
+
+lambda_input_output_test_() ->
+  [
+   ?_assertEqual(#'Fun'{input='Number'(), output='Number'()},
+                 check("\\x -> x", [{x, 'Number'()}])),
+   ?_assertEqual(#'Fun'{input='Number'(), output='Unit'()},
+                 check("\\x -> ()", [{x, 'Number'()}])),
+   ?_assertEqual(#'Fun'{input='Number'(), output='Boolean'()},
+                 check("\\x -> z", [{x, 'Number'()}, {z, 'Boolean'()}]))
+  ].
+
+application_test_() ->
+  [
+   ?_assertEqual(
+      'Number'(),
+      check("(\\x -> y) z",
+            [{x, 'Boolean'()}, {y, 'Number'()}, {z, 'Boolean'()}])),
+
+   ?_assertThrow(
+      {constraint_failed, {#app{}, #'Fun'{}, #'Unit'{}}},
+      check("(\\x -> y) z",
+            [{x, 'Boolean'()}, {y, 'Number'()}, {z, 'Unit'()}]))
+  ].
+
