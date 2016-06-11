@@ -1,8 +1,21 @@
 %% -*- erlang-indent-level: 2; -*-
 -module(erlambda).
+-export([main/1, run_file/1]).
 -export([eval/1, eval/2]).
 -export([app/2, closure/2, lambda/2, lambda/3, iff/3]).
 -include_lib("erlambda/include/erlambda.hrl").
+
+-spec main(list()) -> true.
+main([Filename|_]) ->
+  R = try run_file(Filename) catch _:M -> M end,
+  erlang:display(R).
+
+-spec run_file(list()) -> value().
+run_file(Filename) ->
+  {ok, Contents} = file:read_file(Filename),
+  AST = erlambda_parser:parse(binary_to_list(Contents)),
+  _Type = erlambda_typer:check(AST),
+  ?MODULE:eval(AST, []).
 
 -spec eval(expr()) -> value().
 eval(Expr) -> eval(Expr, []).
