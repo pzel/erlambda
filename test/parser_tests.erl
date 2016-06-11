@@ -18,8 +18,10 @@ immediate_values_test_() ->
 
 lambda_expressions_test_() ->
   [
-   ?_assertEqual(#lambda{var=x, body=x}, parse("\\x -> x")),
-   ?_assertEqual(#lambda{var=x, body=#lambda{var=y, body={}}},
+   ?_assertEqual(#lambda{var= #param{name=x}, body=x},
+                 parse("\\x -> x")),
+   ?_assertEqual(#lambda{var= #param{name=x},
+                         body=#lambda{var= #param{name=y}, body={}}},
                  parse("\\x-> \\y-> ()"))
   ].
 

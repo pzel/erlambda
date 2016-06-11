@@ -2,28 +2,31 @@
 %% Records
 -record(app, {f :: closure(), x :: expr()}).
 -record(closure, {lambda :: lambda(), env :: env()}).
--record(lambda, {var :: var(), body :: expr()}).
+-record(lambda, {var :: param(), body :: expr()}).
 -record(iff, {condition :: expr(),
               consequent :: expr(), alternative :: expr()}).
+-record(param, {name :: atom(),
+                type = any_type :: type_()}).
 
 %% Expressions (Host langauge types)
 -type app() :: #app{}.
 -type bool_() :: 'True' | 'False'.
 -type closure() :: #closure{}.
--type env() :: [{var(), value()}].
--type expr() :: app() | lambda() | var() | number() | unit() | iff().
+-type env() :: [{atom(), value()}].
+-type expr() :: app() | lambda() | param() | number() | unit() | iff() | ref().
 -type iff() :: #iff{}.
 -type lambda() :: #lambda{}.
+-type param() :: #param{}.
+-type ref() :: atom().
 -type unit() :: {}.
 -type value() :: closure() | number() | bool_() | unit().
--type var() :: atom().
 
 %% Predicates
 -define(is_boolean(R), R =:= 'True'; R =:= 'False').
 
-
 %% Types (guest language types)
--type type_() :: 'Number'() | 'Boolean'() | 'Unit'() | 'Fun'().
+-type type_() :: 'Number'() | 'Boolean'() | 'Unit'() | 'Fun'()
+               | any_type.
 
 -record('Boolean', {}).
 -type 'Boolean'() :: #'Boolean'{}.
@@ -36,4 +39,3 @@
 
 -record('Unit', {}).
 -type 'Unit'() :: #'Unit'{}.
-

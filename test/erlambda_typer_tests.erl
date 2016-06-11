@@ -23,7 +23,7 @@ binding_from_type_environment_test_() ->
 lambda_input_output_test_() ->
   [
    ?_assertEqual(#'Fun'{input='Number'(), output='Number'()},
-                 check("\\x -> x", [{x, 'Number'()}])),
+                 check("\\ x:Number -> x")),
    ?_assertEqual(#'Fun'{input='Number'(), output='Unit'()},
                  check("\\x -> ()", [{x, 'Number'()}])),
    ?_assertEqual(#'Fun'{input='Number'(), output='Boolean'()},

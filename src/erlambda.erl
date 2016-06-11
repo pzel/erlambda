@@ -1,7 +1,7 @@
 %% -*- erlang-indent-level: 2; -*-
 -module(erlambda).
 -export([eval/1, eval/2]).
--export([app/2, closure/2, lambda/2, iff/3]).
+-export([app/2, closure/2, lambda/2, lambda/3, iff/3]).
 -include_lib("erlambda/include/erlambda.hrl").
 
 -spec eval(expr()) -> value().
@@ -14,13 +14,13 @@ eval(N, _) when is_number(N) -> N;
 eval(B, _) when ?is_boolean(B) -> B;
 eval({}, _)  -> {};
 eval(I = #iff{}, Env) -> eval_iff(I, Env);
-eval(Var, Env) -> lookup(Var, Env).
+eval(Reference, Env) -> lookup(Reference, Env).
 
 -spec aply(value(), value()) -> value().
-aply(#closure{lambda=#lambda{var = V, body = Body}, env=E}, X) ->
+aply(#closure{lambda=#lambda{var= #param{name=V}, body= Body}, env=E}, X) ->
   eval(Body, [{V, X}| E]).
 
--spec lookup(var(), env()) -> value().
+-spec lookup(ref(), env()) -> value().
 lookup(K,Env) ->
   case proplists:lookup(K,Env) of
     {K,V} -> V;
@@ -37,8 +37,14 @@ closure(A,E) -> #closure{lambda=A,env=E}.
 -spec iff(expr(), expr(), expr()) -> expr().
 iff(A,B,C) -> #iff{condition=A, consequent=B, alternative=C}.
 
--spec lambda(var(), expr()) -> lambda().
-lambda(V,B) -> #lambda{var=V, body=B}.
+-spec lambda(atom(), expr()) -> lambda().
+lambda(V,B) -> lambda(V,any_type,B).
+
+-spec lambda(atom(), type_(), expr()) -> lambda().
+lambda(V,T,B) -> #lambda{var=param(V, T), body=B}.
+
+-spec param(atom(), type_()) -> param().
+param(N,T) -> #param{name=N, type=T}.
 
 % Special form evaluation
 -spec eval_iff(iff(), env()) -> value().

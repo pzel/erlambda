@@ -10,6 +10,7 @@ check(B,_) when ?is_boolean(B) -> erlambda_types:'Boolean'();
 check({},_) -> erlambda_types:'Unit'();
 check(#lambda{} = L, Env) -> type_fun(L, Env);
 check(#app{} = A, Env) -> type_app(A, Env);
+check(#param{name = N, type = T}, Env) -> type_param(N, T, Env);
 check(V, Env) when is_atom(V) -> type_var(V, Env).
 
 -spec check (expr()) -> type_().
@@ -29,11 +30,24 @@ type_app(#app{f=F, x=X} = A, Env) ->
   end.
 
 type_fun(#lambda{var=V, body=B}, Env) ->
-  erlambda_types:'Fun'(check(V,Env),check(B,Env)).
+  ArgType = check(V,Env),
+  InnerEnv = [{V#param.name, ArgType}|Env],
+  erlambda_types:'Fun'(ArgType, check(B,InnerEnv)).
+
+type_param(Name, SuppliedType, Env) ->
+  case {SuppliedType, check(Name, Env)} of
+    {any_type, Inferred} -> Inferred;
+    {SuppliedType, any_type} -> SuppliedType;
+    {SuppliedType, SuppliedType} -> SuppliedType;
+    {SuppliedType, Different} ->
+      throw({conflicting_types,
+             Name,
+             {supplied, SuppliedType},
+             {inferred, Different}})
+  end.
 
 type_var(Var, Env) ->
   case proplists:lookup(Var,Env) of
     {Var,T} -> T;
     none -> any_type
   end.
-
