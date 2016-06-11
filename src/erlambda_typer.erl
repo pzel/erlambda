@@ -34,17 +34,8 @@ type_fun(#lambda{var=V, body=B}, Env) ->
   InnerEnv = [{V#param.name, ArgType}|Env],
   erlambda_types:'Fun'(ArgType, check(B,InnerEnv)).
 
-type_param(Name, SuppliedType, Env) ->
-  case {SuppliedType, check(Name, Env)} of
-    {any_type, Inferred} -> Inferred;
-    {SuppliedType, any_type} -> SuppliedType;
-    {SuppliedType, SuppliedType} -> SuppliedType;
-    {SuppliedType, Different} ->
-      throw({conflicting_types,
-             Name,
-             {supplied, SuppliedType},
-             {inferred, Different}})
-  end.
+type_param(Name, any_type, Env) -> check(Name, Env);
+type_param(_, SuppliedType, _) -> SuppliedType.
 
 type_var(Var, Env) ->
   case proplists:lookup(Var,Env) of

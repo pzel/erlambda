@@ -24,22 +24,27 @@ lambda_input_output_test_() ->
   [
    ?_assertEqual(#'Fun'{input='Number'(), output='Number'()},
                  check("\\ x:Number -> x")),
-   ?_assertEqual(#'Fun'{input='Number'(), output='Unit'()},
-                 check("\\x -> ()", [{x, 'Number'()}])),
+
+   ?_assertEqual(#'Fun'{input='Number'(),
+                        output= #'Fun'{input = any_type, output='Unit'()}},
+                 check("(\\x:Number -> \\y -> ())")),
+
    ?_assertEqual(#'Fun'{input='Number'(), output='Boolean'()},
-                 check("\\x -> z", [{x, 'Number'()}, {z, 'Boolean'()}]))
+                 check("\\x -> z", [{x, 'Number'()}, {z, 'Boolean'()}])),
+
+   ?_assertThrow({constraint_failed, _},
+                 check("(\\x:Number -> ()) True"))
   ].
 
 application_test_() ->
   [
    ?_assertEqual(
       'Number'(),
-      check("(\\x -> y) z",
-            [{x, 'Boolean'()}, {y, 'Number'()}, {z, 'Boolean'()}])),
+      check("(\\x:Boolean -> 3) z",
+            [{z, 'Boolean'()}])),
 
    ?_assertThrow(
       {constraint_failed, {#app{}, #'Fun'{}, #'Unit'{}}},
-      check("(\\x -> y) z",
-            [{x, 'Boolean'()}, {y, 'Number'()}, {z, 'Unit'()}]))
+      check("(\\x:Boolean -> y) z",
+            [{y, 'Number'()}, {z, 'Unit'()}]))
   ].
-
