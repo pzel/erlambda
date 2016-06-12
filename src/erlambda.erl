@@ -5,10 +5,11 @@
 -export([app/2, closure/2, lambda/2, lambda/3, iff/3]).
 -include_lib("erlambda/include/erlambda.hrl").
 
--spec main(list()) -> true.
+-spec main(list()) -> string().
 main([Filename|_]) ->
   R = try run_file(Filename) catch _:M -> M end,
-  erlang:display(R).
+  erlang:display(R),
+  R.
 
 -spec run_file(list()) -> value().
 run_file(Filename) ->

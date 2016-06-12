@@ -8,7 +8,7 @@ run(S) -> erlambda:eval(erlambda_parser:parse(S)).
 
 escript_interface_test_() ->
   ?_assertEqual
-     (true,
+     ({},
       (fun() ->
           file:write_file("/tmp/erlambda_example.tlc",
                           "(\\x:Unit->x)()"),
