@@ -48,3 +48,16 @@ application_test_() ->
       check("(\\x:Boolean -> y) z",
             [{y, 'Number'()}, {z, 'Unit'()}]))
   ].
+
+function_type_test_() ->
+  [
+   ?_assertEqual('Number'(),
+                 check("(\\f:(Number->Number) -> f 5) (\\x:Number-> x)"))
+  ].
+
+inference_test_() ->
+  [
+   ?_assertEqual(
+      'Number'(),
+      check("(\\f:(Number->Number) -> f 5) (\\x -> x) "))
+  ].

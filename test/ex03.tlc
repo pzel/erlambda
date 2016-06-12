@@ -1,0 +1,2 @@
+(\f:(Number->Number) -> f 5) (\n -> n)
+

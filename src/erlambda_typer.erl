@@ -21,11 +21,13 @@ default_env() -> [].
 
 %% Type rules
 
-type_app(#app{f=F, x=X} = A, Env) ->
+type_app(#app{f = F, x=X} = A, Env) ->
   T0 = check(F, Env),
   T1 = check(X, Env),
-  case T0 of
-    #'Fun'{input=T1, output=TOutput} -> TOutput;
+  case {T0,T1} of
+    {#'Fun'{input=T1, output=TOutput}, _} -> TOutput;
+    %% very poor man's inference.
+    {#'Fun'{input=#'Fun'{output=O2}}, #'Fun'{input=_, output=any_type}} -> O2;
     _ -> throw({constraint_failed, {A, T0, T1}})
   end.
 

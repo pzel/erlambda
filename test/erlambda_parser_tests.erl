@@ -1,4 +1,4 @@
--module(parser_tests).
+-module(erlambda_parser_tests).
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("erlambda/include/erlambda.hrl").
 
@@ -44,4 +44,20 @@ nesting_test_() ->
    ?_assertEqual(parse("x"), parse("((((((((x))))))))")),
    ?_assertEqual(parse("()"), parse("((((((((()))))))))")),
    ?_assertEqual(parse("f x"), parse("((f x))"))
+  ].
+
+type_annotation_test_() ->
+  [
+   ?_assertEqual
+      (#lambda{var = #param{name = p, type = #'Number'{}},
+               body = q},
+       parse("\\p:Number -> q")),
+
+   ?_assertEqual
+      (#lambda{var =
+                 #param{name = f,
+                        type = #'Fun'{input= #'Number'{}, output= #'Unit'{}}},
+               body = g},
+       parse("\\f:(Number->Unit) -> g"))
+
   ].

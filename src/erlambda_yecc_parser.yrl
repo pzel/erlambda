@@ -1,5 +1,5 @@
 Nonterminals expression
-app bool ifexpression lambda unit.
+app bool ifexpression lambda funtype unit valuetype.
 
 Terminals '\\' ':' '(' ')' '->' atom integer var if then else.
 
@@ -10,8 +10,11 @@ Left 80 app.
 app -> expression expression : app('$1', '$2').
 bool -> var : assert_bool(unpack('$1')).
 lambda -> '\\' atom '->' expression : untyped_lambda('$2','$4').
-lambda -> '\\' atom ':' var '->' expression : typed_lambda('$2','$4', '$6').
+lambda -> '\\' atom ':' valuetype '->' expression : valuetyped_lambda('$2','$4','$6').
+lambda -> '\\' atom ':' funtype '->' expression : funtyped_lambda('$2','$4','$6').
 unit -> '(' ')' : {}.
+funtype -> '(' var '->' var ')' : {unpack('$2'), unpack('$4')}.
+valuetype -> var : '$1'.
 
 ifexpression -> if expression then expression else expression :
                 iff('$2', '$4', '$6').
@@ -30,12 +33,22 @@ expression -> unit : '$1'.
 Erlang code.
 
 app(F,X) -> erlambda:app(F,X).
+
 assert_bool(B) when B =:= 'True'; B =:= 'False' -> B;
+
 assert_bool(X) -> error({not_boolean, X}).
+
 untyped_lambda(Var,Body) ->
   erlambda:lambda(unpack(Var),any_type,Body).
-typed_lambda(Var, Type, Body) ->
+
+funtyped_lambda(Var, {In,Out}, Body) ->
+  T = erlambda_types:fun_from_atoms(In, Out),
+  erlambda:lambda(unpack(Var), T, Body).
+
+valuetyped_lambda(Var, Type, Body) ->
   T = erlambda_types:from_atom(unpack(Type)),
   erlambda:lambda(unpack(Var), T,Body).
+
 iff(A,B,C) -> erlambda:iff(A,B,C).
+
 unpack({_, _, V}) -> V.
