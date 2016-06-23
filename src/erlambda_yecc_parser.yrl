@@ -1,20 +1,20 @@
 Nonterminals expression
 app bool ifexpression lambda funtype unit valuetype.
 
-Terminals '\\' ':' '(' ')' '->' atom integer var if then else.
+Terminals '\\' ':' '(' ')' '->' int var constructor if then else.
 
 
 Rootsymbol expression.
 
 Left 80 app.
 app -> expression expression : app('$1', '$2').
-bool -> var : assert_bool(unpack('$1')).
-lambda -> '\\' atom '->' expression : untyped_lambda('$2','$4').
-lambda -> '\\' atom ':' valuetype '->' expression : valuetyped_lambda('$2','$4','$6').
-lambda -> '\\' atom ':' funtype '->' expression : funtyped_lambda('$2','$4','$6').
+bool -> constructor : assert_bool(unpack('$1')).
+lambda -> '\\' var '->' expression : untyped_lambda('$2','$4').
+lambda -> '\\' var ':' valuetype '->' expression : valuetyped_lambda('$2','$4','$6').
+lambda -> '\\' var ':' funtype '->' expression : funtyped_lambda('$2','$4','$6').
 unit -> '(' ')' : {}.
-funtype -> '(' var '->' var ')' : {unpack('$2'), unpack('$4')}.
-valuetype -> var : '$1'.
+funtype -> '(' constructor '->' constructor ')' : {unpack('$2'), unpack('$4')}.
+valuetype -> constructor : '$1'.
 
 ifexpression -> if expression then expression else expression :
                 iff('$2', '$4', '$6').
@@ -25,8 +25,8 @@ expression -> lambda : '$1'.
 expression -> bool : '$1'.
 expression -> ifexpression : '$1'.
 
-expression -> atom : unpack('$1').
-expression -> integer : unpack('$1').
+expression -> var : unpack('$1').
+expression -> int : unpack('$1').
 expression -> unit : '$1'.
 
 

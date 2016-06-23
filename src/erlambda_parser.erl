@@ -3,12 +3,7 @@
 -include_lib("erlambda/include/erlambda.hrl").
 
 parse(String) ->
-    {ok, Tokens, _} = erl_scan:string
-                        (String, 0,
-                         [{reserved_word_fun, fun reserved/1}]),
+    {ok, Tokens, _} = erlambda_lexer:string(String, 0),
     {ok, Expr} = erlambda_yecc_parser:parse(Tokens),
     Expr.
-
-reserved(A) ->
-  lists:member(A, ['if', 'then', 'else']).
 
