@@ -32,8 +32,14 @@ lambda_input_output_test_() ->
    ?_assertEqual(#'Fun'{input='Number'(), output='Boolean'()},
                  check("\\x -> z", [{x, 'Number'()}, {z, 'Boolean'()}])),
 
+   ?_assertEqual(#'Fun'{input='Number'(), output='Number'()},
+                 check("\\x:Number -> x + 4")),
+
    ?_assertThrow({constraint_failed, _},
-                 check("(\\x:Number -> ()) True"))
+                 check("(\\x:Number -> ()) True")),
+
+   ?_assertThrow({constraint_failed, _},
+                 check("(\\x:Number -> x + True)"))
   ].
 
 application_test_() ->

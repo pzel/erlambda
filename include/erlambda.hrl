@@ -7,6 +7,8 @@
               consequent :: expr(), alternative :: expr()}).
 -record(param, {name :: atom(),
                 type = any_type :: type_()}).
+-record(primop, {op :: atom(),
+                 args :: [expr()]}).
 
 %% Expressions (Host langauge types)
 -type app() :: #app{}.
@@ -17,6 +19,7 @@
 -type iff() :: #iff{}.
 -type lambda() :: #lambda{}.
 -type param() :: #param{}.
+-type primop() :: #primop{}.
 -type ref() :: atom().
 -type unit() :: {}.
 -type value() :: closure() | number() | bool_() | unit().

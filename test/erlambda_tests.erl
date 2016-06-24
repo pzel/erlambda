@@ -66,3 +66,8 @@ iff_test_() ->
                         " then (\\x->x) 1"
                         " else (\\x->x) 0"))
   ].
+
+prim_op_test_() ->
+  [
+   ?_assertEqual(3, run("(\\x -> \\y -> x + y) 2 1"))
+  ].
