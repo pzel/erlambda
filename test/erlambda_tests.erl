@@ -67,6 +67,12 @@ iff_test_() ->
                         " else (\\x->x) 0"))
   ].
 
+let_test_() ->
+  [
+   ?_assertEqual(1, run("let x = 1 in x")),
+   ?_assertEqual(7, run("let f = (\\x -> x + 5) in f 2"))
+  ].
+
 prim_op_test_() ->
   [
    ?_assertEqual(3, run("(\\x -> \\y -> x + y) 2 1"))

@@ -2,7 +2,7 @@
 -module(erlambda).
 -export([main/1, run_file/1]).
 -export([eval/1, eval/2]).
--export([app/2, closure/2, lambda/2, lambda/3, iff/3, primop/3]).
+-export([app/2, closure/2, lambda/2, lambda/3, iff/3, lett/3, primop/3]).
 -include_lib("erlambda/include/erlambda.hrl").
 
 
@@ -24,12 +24,14 @@ eval(Expr) -> eval(Expr, []).
 
 -spec eval(expr(), env()) -> value().
 eval(#app{f=F,x=X}, Env) -> aply(eval(F, Env), eval(X,Env));
+eval(#lett{var=N,val=V,in=B}, Env) -> eval(#app{f=lambda(N,B), x=V}, Env);
 eval(#primop{op=F,args=As}, Env) -> aply_prim(F, [eval(A,Env)||A <- As]);
 eval(#lambda{} = L, Env) -> #closure{lambda = L, env = Env};
 eval(N, _) when is_number(N) -> N;
 eval(B, _) when ?is_boolean(B) -> B;
 eval({}, _)  -> {};
 eval(I = #iff{}, Env) -> eval_iff(I, Env);
+
 eval(Reference, Env) -> lookup(Reference, Env).
 
 -spec aply(value(), value()) -> value().
@@ -55,6 +57,9 @@ closure(A,E) -> #closure{lambda=A,env=E}.
 
 -spec iff(expr(), expr(), expr()) -> expr().
 iff(A,B,C) -> #iff{condition=A, consequent=B, alternative=C}.
+
+-spec lett(atom(), expr(), expr()) -> expr().
+lett(A,B,C) -> #lett{var=A, val=B, in=C}.
 
 -spec lambda(atom(), expr()) -> lambda().
 lambda(V,B) -> lambda(V,any_type,B).

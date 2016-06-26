@@ -1,7 +1,7 @@
 Nonterminals expression
-app bool funtype ifexpression lambda primop unit valuetype.
+app bool funtype ifexpression lambda letexpression primop unit valuetype.
 
-Terminals '\\' ':' '(' ')' '->' '+' int var constructor if then else.
+Terminals '\\' ':' '(' ')' '->' '+' '=' int var constructor if then else let in.
 
 
 Rootsymbol expression.
@@ -17,6 +17,8 @@ funtype -> '(' constructor '->' constructor ')' : {unpack('$2'), unpack('$4')}.
 valuetype -> constructor : '$1'.
 ifexpression -> if expression then expression else expression :
                 iff('$2', '$4', '$6').
+letexpression -> let var '=' expression in expression :
+                lett('$2', '$4', '$6').
 primop -> expression '+' expression : primop('+', '$1', '$3').
 
 expression -> '(' expression ')' : '$2'.
@@ -24,6 +26,7 @@ expression -> app : '$1'.
 expression -> lambda : '$1'.
 expression -> bool : '$1'.
 expression -> ifexpression : '$1'.
+expression -> letexpression : '$1'.
 expression -> primop : '$1'.
 
 expression -> var : unpack('$1').
@@ -53,5 +56,6 @@ valuetyped_lambda(Var, Type, Body) ->
 primop(A,B,C) -> erlambda:primop(A,B,C).
 
 iff(A,B,C) -> erlambda:iff(A,B,C).
+lett(A,B,C) -> erlambda:lett(unpack(A),B,C).
 
 unpack({_, _, V}) -> V.

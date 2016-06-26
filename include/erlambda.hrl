@@ -5,6 +5,9 @@
 -record(lambda, {var :: param(), body :: expr()}).
 -record(iff, {condition :: expr(),
               consequent :: expr(), alternative :: expr()}).
+-record(lett, {var :: atom(),
+               val :: expr(),
+               in :: expr()}).
 -record(param, {name :: atom(),
                 type = any_type :: type_()}).
 -record(primop, {op :: atom(),
@@ -17,6 +20,7 @@
 -type env() :: [{atom(), value()}].
 -type expr() :: app() | lambda() | param() | number() | unit() | iff() | ref().
 -type iff() :: #iff{}.
+-type lett() :: #lett{}.
 -type lambda() :: #lambda{}.
 -type param() :: #param{}.
 -type primop() :: #primop{}.

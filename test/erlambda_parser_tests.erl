@@ -39,6 +39,12 @@ iff_test_() ->
                  parse("if a then b else c"))
   ].
 
+let_test_() ->
+  [
+   ?_assertEqual(#lett{var=a, val=3, in=#app{f=b, x=a}},
+                 parse("let a = 3 in (b a)"))
+  ].
+
 nesting_test_() ->
   [
    ?_assertEqual(parse("x"), parse("((((((((x))))))))")),
