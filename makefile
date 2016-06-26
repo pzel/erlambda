@@ -20,7 +20,7 @@ test:
 readme:
 	@sed -i -e'/## Example usage/,$$ d' README.md ; \
 	echo '## Example usage\n\n```' >> README.md ; \
-	for f in `ls test/ex*.tlc`; do \
+	for f in `ls examples/*.tlc`; do \
 	echo "\n$$ cat $$f"; cat $$f; echo "\n$$ ./erlambda $$f"; ./erlambda ./$$f; \
 	done >> README.md 2>&1 ; \
 	echo '```' >> README.md

@@ -12,19 +12,19 @@ Run `make` to build, test, and produce an `erlambda` exectuable file in the proj
 
 ```
 
-$ cat test/ex01.tlc
-((\x:Unit -> \y:Number -> y) ()) 2473296498327643
-$ ./erlambda test/ex01.tlc
+$ cat examples/01_numbers.tlc
+(\x:Unit -> \y:Number -> y) () 2473296498327643
+$ ./erlambda examples/01_numbers.tlc
 2473296498327643
 
-$ cat test/ex02.tlc
+$ cat examples/02_wrong_types.tlc
 (\i:Number -> i) True
-$ ./erlambda test/ex02.tlc
+$ ./erlambda examples/02_wrong_types.tlc
 {constraint_failed,{{app,{lambda,{param,i,{'Number'}},i},'True'},{'Fun',{'Number'},{'Number'}},{'Boolean'}}}
 
-$ cat test/ex03.tlc
+$ cat examples/03_higher_order_functions.tlc
 let h = (\f:(Number->Number) -> f 5) 
 in h (\x:Number -> x + 2)
-$ ./erlambda test/ex03.tlc
+$ ./erlambda examples/03_higher_order_functions.tlc
 7
 ```
