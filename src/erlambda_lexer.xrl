@@ -1,7 +1,6 @@
 Definitions.
 WS = [\s\t]
-
-%% NL = \n|\r\n|\r
+NL = \n|\r\n|\r
 
 Rules.
 
