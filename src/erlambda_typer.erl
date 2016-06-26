@@ -12,6 +12,7 @@ check(#lambda{} = L, Env) -> type_fun(L, Env);
 check(#app{} = A, Env) -> type_app(A, Env);
 check(#primop{} = P, Env) -> type_primop(P, Env);
 check(#param{name = N, type = T}, Env) -> type_param(N, T, Env);
+check(#lett{} = L, Env) -> type_lett(L, Env);
 check(V, Env) when is_atom(V) -> type_var(V, Env).
 
 -spec check (expr()) -> type_().
@@ -31,6 +32,10 @@ type_app(#app{f = F, x=X} = A, Env) ->
     {#'Fun'{input=#'Fun'{output=O2}}, #'Fun'{input=_, output=any_type}} -> O2;
     _ -> throw({constraint_failed, {A, T0, T1}})
   end.
+
+type_lett(#lett{var=Var, val=Val, 'in'=Body}, Env) ->
+  TVal = check(Val, Env),
+  check(Body, [{Var, TVal}|Env]).
 
 type_primop(#primop{op='+', args=[X,Y]}, Env) ->
   TX = check(X, Env),

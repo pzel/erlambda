@@ -1,1 +1,1 @@
-(\f:(Number->Number) -> f 5) (\n -> n)
+let h = (\f:(Number->Number) -> f 5) in h (\x:Number -> x + 2)

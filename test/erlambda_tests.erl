@@ -70,7 +70,8 @@ iff_test_() ->
 let_test_() ->
   [
    ?_assertEqual(1, run("let x = 1 in x")),
-   ?_assertEqual(7, run("let f = (\\x -> x + 5) in f 2"))
+   ?_assertEqual(7, run("let f = (\\x -> x + 5) in f 2")),
+   ?_assertEqual(7, run("let h = (\\f:(Number->Number) -> f 5) in h (\\x -> x + 2)"))
   ].
 
 prim_op_test_() ->

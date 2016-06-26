@@ -23,7 +23,7 @@ $ ./erlambda test/ex02.tlc
 {constraint_failed,{{app,{lambda,{param,i,{'Number'}},i},'True'},{'Fun',{'Number'},{'Number'}},{'Boolean'}}}
 
 $ cat test/ex03.tlc
-(\f:(Number->Number) -> f 5) (\n -> n)
+let h = (\f:(Number->Number) -> f 5) in h (\x:Number -> x + 2)
 $ ./erlambda test/ex03.tlc
-5
+7
 ```

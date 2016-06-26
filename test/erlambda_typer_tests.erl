@@ -55,6 +55,14 @@ application_test_() ->
             [{y, 'Number'()}, {z, 'Unit'()}]))
   ].
 
+let_test_() ->
+  [
+   ?_assertEqual(
+      'Number'(),
+      check("let x = 5 in x"))
+
+  ].
+
 function_type_test_() ->
   [
    ?_assertEqual('Number'(),
